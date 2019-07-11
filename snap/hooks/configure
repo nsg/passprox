@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 . $SNAP/snap/command-chain/snapcraft-runner
 
@@ -17,5 +17,5 @@ listen stats
   stats uri /
 EOF
 
-# Reload haproxy service
+# Reload haproxy service, fall back to a restart.
 $SNAP/bin/reload || snapctl restart proxysnap

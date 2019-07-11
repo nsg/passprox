@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+. $SNAP/snap/command-chain/snapcraft-runner
+
+# Validate configuration, roll back to last version if this fails
+$SNAP/bin/haproxy -c -f $SNAP_DATA/haproxy.cfg || exit 1

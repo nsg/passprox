@@ -1,4 +1,5 @@
 # Passprox
+[![Snap Status](https://build.snapcraft.io/badge/nsg/passage.svg)](https://build.snapcraft.io/user/nsg/passage)
 
 More or less a vanilla HAProxy install with automatic reloads.
   

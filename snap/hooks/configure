@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. $SNAP/snap/command-chain/snapcraft-runner
+
+[ ! -e $SNAP_DATA/haproxy.cfg ] && \
+cat <<EOF > $SNAP_DATA/haproxy.cfg
+defaults
+  timeout connect 10s
+  timeout client  1m
+  timeout server  1m
+
+listen stats
+  bind *:8081
+  mode http
+  stats enable
+  stats hide-version
+  stats uri /
+EOF
+
+# Reload haproxy service
+$SNAP/bin/reload || snapctl restart proxysnap

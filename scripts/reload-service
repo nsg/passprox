@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. $SNAP/snap/command-chain/snapcraft-runner
+
+while sleep 1; do
+    inotifywait -e close_write $SNAP_DATA/haproxy.cfg
+    $SNAP/bin/reload
+done

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. $SNAP/snap/command-chain/snapcraft-runner
+
+if $SNAP/bin/haproxy -c -f $SNAP_DATA/haproxy.cfg; then
+    kill -USR2 $(cat /etc/haproxy/haproxy.pid)
+else
+    echo "haproxy.cfg is not valid, I will NOT reload the server"
+fi

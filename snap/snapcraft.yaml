@@ -1,0 +1,63 @@
+name: passage
+base: core18
+version: '2.0.1'
+summary: The proxy HAProxy inside a snap
+description: |
+  More or less a vanilla HAProxy install with automatic reloads.
+  
+  Install it and edit $SNAP_DATA/haproxy.cfg. HAProxy will be reloaded automatically
+  if the file is valid.
+
+grade: stable
+confinement: strict
+
+apps:
+  proxysnap:
+    command: bin/haproxy -W -f $SNAP_DATA/haproxy.cfg -p /etc/haproxy/haproxy.pid
+    adapter: full
+    daemon: simple
+    plugs:
+      - network-bind
+
+  reload:
+    command: bin/reload
+    adapter: full
+
+  watch:
+    command: bin/reload-service
+    daemon: simple
+    adapter: full
+
+layout:
+  /etc/haproxy:
+    type: tmpfs
+
+parts:
+  haproxy:
+    source: http://git.haproxy.org/git/haproxy-2.0.git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
+    plugin: make
+    make-parameters:
+      - TARGET=linux-glibc
+      - USE_OPENSSL=1
+      - USE_ZLIB=1
+      - USE_PCRE=1
+    build-packages:
+      - build-essential
+      - libssl-dev
+      - libpcre3-dev
+      - libz-dev
+    stage:
+      - -usr/local/doc
+      - -usr/local/share
+    organize:
+      usr/local/sbin/haproxy: bin/haproxy
+
+  scripts:
+    source: scripts
+    plugin: dump
+    stage-packages:
+      - inotify-tools
+    organize:
+      'reload': bin/
+      'reload-service': bin/

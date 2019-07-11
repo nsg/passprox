@@ -1,4 +1,4 @@
-# Passage
+# Passprox
 
 More or less a vanilla HAProxy install with automatic reloads.
   

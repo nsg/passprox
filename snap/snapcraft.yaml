@@ -58,6 +58,9 @@ parts:
     plugin: dump
     stage-packages:
       - inotify-tools
+    stage:
+      - -usr/share/man
+      - -usr/share/doc
     organize:
       'reload': bin/
       'reload-service': bin/

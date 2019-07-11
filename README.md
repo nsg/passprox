@@ -22,7 +22,18 @@ Inspect the filewatcher with `journalctl -eu snap.passprox.watch.service`, and t
 
 ## Let's Encrypt
 
-[HAProxy ACME v2 client](https://github.com/haproxytech/haproxy-lua-acme) is included to provide Let's Encrypt support.
+[HAProxy ACME v2 client](https://github.com/haproxytech/haproxy-lua-acme) is included to provide Let's Encrypt support. You need to accept the Let's Encrypt TOS and provide a valid e-mail address:
+
+```
+sudo snap set passprox lets-encrypt-tos=accept
+sudo snap set passprox lets-encrypt-contact=user@example.com
+```
+
+Now specify a whitespace separated list of domains to fetch certificates for.
+
+```
+sudo snap set passprox lets-encrypt-certs="example.com example.net"
+```
 
 ## Note
 

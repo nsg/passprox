@@ -17,6 +17,25 @@ listen stats
   stats uri /
 EOF
 
+mkdir -p $SNAP_DATA/acme/
+if [ ! -e $SNAP_DATA/acme/account.key ]; then
+  openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
+    -out $SNAP_DATA/acme/account.key
+fi
+
+LETS_ENCRYPT_CERTS="$(snapctl get lets-encrypt-certs)"
+LETS_ENCRYPT_TOS="$(snapctl get lets-encrypt-tos)"
+LETS_ENCRYPT_CONTACT="$(snapctl get lets-encrypt-contact)"
+
+if [ "x$LETS_ENCRYPT_CONTACT" != "x" ] && [ "x$LETS_ENCRYPT_TOS" == "xaccept" ]; then
+  if [ "x$LETS_ENCRYPT_CERTS" != "x" ]; then
+    for cert in $LETS_ENCRYPT_CERTS; do
+      openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 \
+        -out $SNAP_DATA/acme/$cert.key
+    done
+  fi
+fi
+
 # Reload haproxy service, fall back to a restart.
 if [ -e /etc/haproxy/haproxy.pid ]; then
   $SNAP/bin/reload || snapctl restart passprox

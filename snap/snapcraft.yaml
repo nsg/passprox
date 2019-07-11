@@ -12,7 +12,7 @@ grade: stable
 confinement: strict
 
 apps:
-  proxysnap:
+  passprox:
     command: bin/haproxy -W -f $SNAP_DATA/haproxy.cfg -p /etc/haproxy/haproxy.pid
     adapter: full
     daemon: simple

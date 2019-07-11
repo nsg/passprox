@@ -1,7 +1,7 @@
 # Passprox
 [![Snap Status](https://build.snapcraft.io/badge/nsg/passage.svg)](https://build.snapcraft.io/user/nsg/passage)
 
-More or less a vanilla HAProxy install with automatic reloads.
+More or less a vanilla HAProxy install with automatic reloads and Let's Encrypt support.
   
 Install it and edit `$SNAP_DATA/haproxy.cfg`. HAProxy will be reloaded automatically
 if the file is valid.
@@ -19,6 +19,10 @@ Edit `$SNAP_DATA/haproxy.cfg` (possible /var/snap/passprox/haproxy.cfg). Save th
 ## Debug
 
 Inspect the filewatcher with `journalctl -eu snap.passprox.watch.service`, and the actual HAProxy service with `journalctl -eu snap.passprox.passprox.service`.
+
+## Let's Encrypt
+
+[HAProxy ACME v2 client](https://github.com/haproxytech/haproxy-lua-acme) is included to provide Let's Encrypt support.
 
 ## Note
 

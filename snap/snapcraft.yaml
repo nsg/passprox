@@ -42,6 +42,7 @@ parts:
       - USE_OPENSSL=1
       - USE_ZLIB=1
       - USE_PCRE=1
+      - USE_LUA=1
     build-packages:
       - build-essential
       - libssl-dev
@@ -52,6 +53,7 @@ parts:
       - -usr/local/share
     organize:
       usr/local/sbin/haproxy: bin/haproxy
+    after: [ lua ]
 
   scripts:
     source: scripts
@@ -64,3 +66,53 @@ parts:
     organize:
       'reload': bin/
       'reload-service': bin/
+
+  lua:
+    source: https://www.lua.org/ftp/lua-5.3.5.tar.gz
+    plugin: make
+    override-build: |
+      make linux
+      make install INSTALL_TOP=$SNAPCRAFT_PART_INSTALL
+    organize:
+      'include': usr/
+      'lib': usr/
+      'share': usr/
+    stage:
+      - -man
+    build-packages:
+      - libreadline-dev
+
+  haproxy-lua-acme:
+    source: https://github.com/haproxytech/haproxy-lua-acme.git
+    source-commit: a63486204521b39e821b0128c840b5c5c8aaf568
+    plugin: nil
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+    after: [ lua ]
+
+  haproxy-lua-http:
+    source: https://github.com/haproxytech/haproxy-lua-http.git
+    source-commit: 38d886c8f06870e110d263a540075cf700500486
+    plugin: nil
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+    after: [ lua ]
+
+  json-lua:
+    source: https://github.com/rxi/json.lua.git
+    source-tag: v0.1.2
+    plugin: nil
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+    after: [ lua ]
+
+  luaossl:
+    source: https://github.com/wahern/luaossl.git
+    source-tag: rel-20190612
+    plugin: make
+    make-parameters:
+      - prefix=/usr
+    after: [ lua ]

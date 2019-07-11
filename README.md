@@ -18,4 +18,4 @@ Edit `$SNAP_DATA/haproxy.cfg` (possible /var/snap/passprox/haproxy.cfg). Save th
 
 ## Debug
 
-Inspect the filewatcher with `journalctl -fu snap.passprox.watch.service`, and the actual HAProxy service with `journalctl -fu snap.passprox.passprox.service`.
+Inspect the filewatcher with `journalctl -eu snap.passprox.watch.service`, and the actual HAProxy service with `journalctl -eu snap.passprox.passprox.service`.

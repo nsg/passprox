@@ -18,4 +18,8 @@ listen stats
 EOF
 
 # Reload haproxy service, fall back to a restart.
-$SNAP/bin/reload || snapctl restart passprox
+if [ -e /etc/haproxy/haproxy.pid ]; then
+  $SNAP/bin/reload || snapctl restart passprox
+else
+  snapctl restart passprox
+fi

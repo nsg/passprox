@@ -17,7 +17,7 @@ frontend http
   use_backend letsencrypt-backend if { path_beg /.well-known/acme-challenge/ }
 
 #frontend http
-#  bind *:443 ssl crt /my/cert/path
+#  bind *:443 ssl crt "\$SNAP_DATA/certs/"
 #
 #  # Renewals are over TLS
 #  use_backend letsencrypt-backend if { path_beg /.well-known/acme-challenge/ }

@@ -41,8 +41,8 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
    [ "x$LETS_ENCRYPT_CONTACT" != "x" ]; then
 
   echo "Setup files and request certificates"
-  mkdir -p $SNAP_DATA/acme/{work,logs,config}
-  touch $SNAP_DATA/acme/cli.ini
+  mkdir -p $SNAP_DATA/certbot/{work,logs,config}
+  touch $SNAP_DATA/certbot/cli.ini
 
   if [ -e /etc/letsencrypt/cli.ini ]; then
     echo -n "WARNING: The certbot command will fail because it "
@@ -54,10 +54,10 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
   for cert in $LETS_ENCRYPT_CERTS; do
     echo "Request certificate for $cert"
     certbot certonly \
-        --work-dir="$SNAP_DATA/acme/work" \
-        --logs-dir="$SNAP_DATA/acme/logs" \
-        --config-dir="$SNAP_DATA/acme/config" \
-        --config="$SNAP_DATA/acme/cli.ini" \
+        --work-dir="$SNAP_DATA/certbot/work" \
+        --logs-dir="$SNAP_DATA/certbot/logs" \
+        --config-dir="$SNAP_DATA/certbot/config" \
+        --config="$SNAP_DATA/certbot/cli.ini" \
         --standalone \
         -d $cert \
         --non-interactive \

@@ -3,8 +3,17 @@
 . $SNAP/snap/command-chain/snapcraft-runner
 
 certbot renew \
-    --work-dir="$SNAP_DATA/acme/work" \
-    --logs-dir="$SNAP_DATA/acme/logs" \
-    --config-dir="$SNAP_DATA/acme/config" \
-    --config="$SNAP_DATA/acme/cli.ini" \
+    --work-dir="$SNAP_DATA/certbot/work" \
+    --logs-dir="$SNAP_DATA/certbot/logs" \
+    --config-dir="$SNAP_DATA/certbot/config" \
+    --config="$SNAP_DATA/certbot/cli.ini" \
     --tls-sni-01-port=8888
+
+mkdir -p $SNAP_DATA/certs/
+chmod 0700 $SNAP_DATA/certs/
+for d in $SNAP_DATA/certbot/config/live/*; done
+    cat $d/{fullchain.pem,privkey.pem} > "$SNAP_DATA/certs/$(basename $d).pem"
+done
+chmod 0600 $SNAP_DATA/certs/*.pem
+
+$SNAP/bin/reload

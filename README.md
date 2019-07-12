@@ -22,7 +22,7 @@ Inspect the filewatcher with `journalctl -eu snap.passprox.watch.service`, and t
 
 ## Let's Encrypt
 
-[HAProxy ACME v2 client](https://github.com/haproxytech/haproxy-lua-acme) is included to provide Let's Encrypt support. You need to accept the Let's Encrypt TOS and provide a valid e-mail address:
+Certbot is included to provide Let's Encrypt support. You need to accept the Let's Encrypt TOS and provide a valid e-mail address:
 
 ```
 sudo snap set passprox lets-encrypt-tos=accept
@@ -35,30 +35,7 @@ Now specify a whitespace separated list of domains to fetch certificates for:
 sudo snap set passprox lets-encrypt-certs="example.com example.net"
 ```
 
-With the above settings, a configuration should be generated at `/etc/haproxy/config.lua`. Include it, and the ACME scripts in the global section like this:
-
-```
-global
-  lua-load /etc/haproxy/config.lua
-  lua-load /usr/local/share/lua/5.3/acme.lua
-```
-
-You now need to update your listen/frontend that binds to port 80 to forward the well-known urls to ACME. Also add two new listen sections that the ACME script uses for verification.
-
-```
-listen http
-    bind *:80
-    http-request use-service lua.acme if { path_beg /.well-known/acme-challenge/  }
-
-listen acme
-  bind 127.0.0.1:9011
-  http-request use-service lua.acme
-
-listen acme-ca
-  bind 127.0.0.1:9012
-  server ca acme-v02.api.letsencrypt.org:443 ssl verify required ca-file "$SNAP/etc/certs/lets-encrypt-x3-cross-signed.pem"
-  http-request set-header Host acme-v02.api.letsencrypt.org
-```
+The default configuration contains the needed bits for Certbot to work. It is important that you not break it, you need to forward both http and https.
 
 ## Note
 

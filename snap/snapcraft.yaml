@@ -43,6 +43,9 @@ hooks:
   post-refresh:
     plugs:
       - network
+  configure:
+    plugs:
+      - network
 
 layout:
   /etc/haproxy:

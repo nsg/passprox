@@ -26,6 +26,12 @@ apps:
     plugs:
       - network
 
+  refresh-certs:
+    command: bin/refresh-certs
+    adapter: full
+    plugs:
+      - network
+
   watch:
     command: bin/reload-service
     daemon: simple
@@ -74,12 +80,14 @@ parts:
     plugin: dump
     stage-packages:
       - inotify-tools
+      - curl
     stage:
       - -usr/share/man
       - -usr/share/doc
     organize:
       'reload': bin/
       'reload-service': bin/
+      'refresh-certs': bin/
 
   lets-encrypt-x3-cert:
     plugin: nil

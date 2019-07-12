@@ -21,6 +21,7 @@ mkdir -p $SNAP_DATA/acme/
 if [ ! -e $SNAP_DATA/acme/account.key ]; then
   openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
     -out $SNAP_DATA/acme/account.key
+    chmod 0600 $SNAP_DATA/acme/account.key
 fi
 
 LETS_ENCRYPT_CERTS="$(snapctl get lets-encrypt-certs)"
@@ -33,6 +34,7 @@ if [ "x$LETS_ENCRYPT_CONTACT" != "x" ] && [ "x$LETS_ENCRYPT_TOS" == "xaccept" ];
       if [ ! -e $SNAP_DATA/acme/$cert.key ]; then
         openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 \
           -out $SNAP_DATA/acme/$cert.key
+        chmod 0600 $SNAP_DATA/acme/$cert.key
       fi
 
       cat <<EOF > /etc/haproxy/config.lua

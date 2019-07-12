@@ -63,8 +63,7 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
         --non-interactive \
         --agree-tos \
         --email "$LETS_ENCRYPT_CONTACT" \
-        --http-01-port=8888 \
-        --test-cert
+        --http-01-port=8888
   done
 fi
 

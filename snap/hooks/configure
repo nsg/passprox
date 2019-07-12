@@ -5,59 +5,58 @@
 [ ! -e $SNAP_DATA/haproxy.cfg ] && \
 cat <<EOF > $SNAP_DATA/haproxy.cfg
 defaults
+  mode http
   timeout connect 10s
   timeout client  1m
   timeout server  1m
 
+frontend http
+  bind *:80
+
+  # This is used when you check out a new certificate, renews will be over TLS
+  use_backend letsencrypt-backend if { path_beg /.well-known/acme-challenge/ }
+
+#frontend http
+#  bind *:443 ssl crt /my/cert/path
+#
+#  # Renewals are over TLS
+#  use_backend letsencrypt-backend if { path_beg /.well-known/acme-challenge/ }
+
+backend letsencrypt-backend
+  server certbot 127.0.0.1:8888
+
 listen stats
-  bind *:8081
-  mode http
+  bind *:8080
   stats enable
   stats hide-version
   stats uri /
 EOF
 
-mkdir -p $SNAP_DATA/acme/
-if [ ! -e $SNAP_DATA/acme/account.key ]; then
-  openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
-    -out $SNAP_DATA/acme/account.key
-    chmod 0600 $SNAP_DATA/acme/account.key
-fi
-
 LETS_ENCRYPT_CERTS="$(snapctl get lets-encrypt-certs)"
 LETS_ENCRYPT_TOS="$(snapctl get lets-encrypt-tos)"
 LETS_ENCRYPT_CONTACT="$(snapctl get lets-encrypt-contact)"
 
-if [ "x$LETS_ENCRYPT_CONTACT" != "x" ] && [ "x$LETS_ENCRYPT_TOS" == "xaccept" ]; then
-  if [ "x$LETS_ENCRYPT_CERTS" != "x" ]; then
-    for cert in $LETS_ENCRYPT_CERTS; do
-      if [ ! -e $SNAP_DATA/acme/$cert.key ]; then
-        openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 \
-          -out $SNAP_DATA/acme/$cert.key
-        chmod 0600 $SNAP_DATA/acme/$cert.key
-      fi
+if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
+   [ "x$LETS_ENCRYPT_TOS" == "xaccept" ] && \
+   [ "x$LETS_ENCRYPT_CONTACT" != "x" ]; then
 
-      cat <<EOF > /etc/haproxy/config.lua
-config = {
-    registration = {
-        -- You can read TOS here: https://letsencrypt.org/repository/
-        termsOfServiceAgreed = true,
-        contact = {"mailto:${LETS_ENCRYPT_CONTACT}"}
-    },
+  echo "Setup files and request certificates"
+  mkdir -p $SNAP_DATA/acme/{work,logs,config}
 
-    -- ACME certificate authority configuration
-    ca = {
-        -- HAProxy backend/server which proxies requests to ACME server
-        proxy_uri = "http://127.0.0.1:9012",
-        -- ACME server URI (also returned by ACME directory listings)
-        -- Use this server name in HAProxy config
-        -- uri = "https://acme-v02.api.letsencrypt.org",
-        uri = "https://acme-staging-v02.api.letsencrypt.org",
-    }
-}
-EOF
-    done
-  fi
+  for cert in $LETS_ENCRYPT_CERTS; do
+    echo "Request certificate for $cert"
+    certbot certonly \
+        --standalone \
+        -d $cert \
+        --non-interactive \
+        --agree-tos \
+        --email "$LETS_ENCRYPT_CONTACT" \
+        --http-01-port=8888 \
+        --test-cert \
+        --work-dir="$SNAP_DATA/acme/work" \
+        --logs-dir="$SNAP_DATA/acme/logs" \
+        --config-dir="$SNAP_DATA/acme/config"
+  done
 fi
 
 # Reload haproxy service, fall back to a restart.

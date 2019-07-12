@@ -47,10 +47,6 @@ hooks:
 layout:
   /etc/haproxy:
     type: tmpfs
-  /usr/local/share/lua:
-    bind: $SNAP/usr/local/share/lua
-  /usr/local/lib/lua:
-    bind: $SNAP/usr/local/lib/lua
 
 parts:
   haproxy:
@@ -108,37 +104,7 @@ parts:
     build-packages:
       - libreadline-dev
 
-  haproxy-lua-acme:
-    source: https://github.com/haproxytech/haproxy-lua-acme.git
-    source-commit: a63486204521b39e821b0128c840b5c5c8aaf568
+  certbot:
     plugin: nil
-    override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
-      cp acme.lua $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
-    after: [ lua ]
-
-  haproxy-lua-http:
-    source: https://github.com/haproxytech/haproxy-lua-http.git
-    source-commit: 38d886c8f06870e110d263a540075cf700500486
-    plugin: nil
-    override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
-      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
-    after: [ lua ]
-
-  json-lua:
-    source: https://github.com/rxi/json.lua.git
-    source-tag: v0.1.2
-    plugin: nil
-    override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
-      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
-    after: [ lua ]
-
-  luaossl:
-    source: https://github.com/wahern/luaossl.git
-    source-tag: rel-20190612
-    plugin: make
-    make-parameters:
-      - prefix=/usr/local
-    after: [ lua ]
+    stage-packages:
+      - certbot

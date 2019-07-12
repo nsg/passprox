@@ -2,42 +2,8 @@
 
 . $SNAP/snap/command-chain/snapcraft-runner
 
-LETS_ENCRYPT_CERTS="$(snapctl get lets-encrypt-certs)"
-
-die() {
-    echo "Let's Encrypt: $@"
-    exit 1
-}
-
-if ! nc -w 1 127.0.0.1 9011; then
-    die "Port 9011 closed, is the ACME service configured?"
-fi
-
-if [ -z "$LETS_ENCRYPT_CERTS" ]; then
-    die "No certificates specified"
-fi
-
-if [ ! -e "$SNAP_DATA/acme/account.key" ]; then
-    die "account.key not found"
-fi
-
-for cert in $LETS_ENCRYPT_CERTS; do
-    if [ ! -e "$SNAP_DATA/acme/$cert.key" ]; then
-        die "$cert.key not found"
-    fi
-done
-
-for cert in $LETS_ENCRYPT_CERTS; do
-    curl -XPOST http://127.0.0.1:9011/acme/order \
-        -F "account_key=@$SNAP_DATA/acme/account.key" \
-        -F "domain=$cert" \
-        -F "domain_key=@$SNAP_DATA/acme/$cert.key" \
-        -o $SNAP_DATA/acme/$cert.pem.tmp
-    if [ -s $SNAP_DATA/acme/$cert.pem.tmp ]; then
-        mv $SNAP_DATA/acme/$cert.pem{.tmp,}
-        echo "Fetched a new certificate for $cert"
-    else
-        rm $SNAP_DATA/acme/$cert.pem.tmp
-        echo "Failed to checkout a certificate for $cert"
-    fi
-done
+certbot renew \
+    --tls-sni-01-port=8888 \
+    --work-dir="$SNAP_DATA/acme/work" \
+    --logs-dir="$SNAP_DATA/acme/logs" \
+    --config-dir="$SNAP_DATA/acme/config"

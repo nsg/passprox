@@ -70,7 +70,7 @@ fi
 
 # Reload haproxy service, fall back to a restart.
 if [ -e /etc/haproxy/haproxy.pid ]; then
-  $SNAP/bin/reload || snapctl restart passprox
+  $SNAP/bin/reload || snapctl restart passprox.haproxy
 else
-  snapctl restart passprox
+  snapctl restart passprox.haproxy
 fi

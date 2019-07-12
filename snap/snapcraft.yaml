@@ -13,6 +13,9 @@ confinement: strict
 
 apps:
   passprox:
+    command: echo "Usage instructions at https://github.com/nsg/passprox"
+
+  haproxy:
     command: bin/haproxy -W -f $SNAP_DATA/haproxy.cfg -p /etc/haproxy/haproxy.pid
     adapter: full
     daemon: simple

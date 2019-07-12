@@ -16,6 +16,9 @@ apps:
     command: bin/haproxy -W -f $SNAP_DATA/haproxy.cfg -p /etc/haproxy/haproxy.pid
     adapter: full
     daemon: simple
+    passthrough:
+      restart-condition: always
+      restart-delay: 5s
     plugs:
       - network-bind
       - network

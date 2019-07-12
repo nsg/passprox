@@ -37,6 +37,27 @@ sudo snap set passprox lets-encrypt-certs="example.com example.net"
 
 The default configuration contains the needed bits for Certbot to work. It is important that you not break it, you need to forward both http and https.
 
+### Example haproxy.cfg
+```
+defaults
+  mode http
+
+frontend http
+  bind *:80
+
+  # This is used when you check out a new certificate, renews will be over TLS
+  use_backend letsencrypt-backend if { path_beg /.well-known/acme-challenge/ }
+
+frontend https
+  bind *:443 ssl crt "$SNAP_DATA/certs/"
+
+  # Renewals are over TLS
+  use_backend letsencrypt-backend if { path_beg /.well-known/acme-challenge/ }
+
+backend letsencrypt-backend
+  server certbot 127.0.0.1:8888
+```
+
 ## Note
 
 Note that `stable`, `candidate`, `beta` and `edge` will be tracking the latest release. Snapd updates packages automatically in the background so it's possible that a future update will change the syntax in haproxy.cfg and break the update.

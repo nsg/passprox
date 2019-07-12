@@ -30,6 +30,7 @@ apps:
     command: bin/refresh-certs
     adapter: full
     plugs:
+      - network-bind
       - network
 
   watch:
@@ -45,6 +46,7 @@ hooks:
       - network
   configure:
     plugs:
+      - network-bind
       - network
 
 layout:

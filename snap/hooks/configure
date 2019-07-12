@@ -43,6 +43,13 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
   echo "Setup files and request certificates"
   mkdir -p $SNAP_DATA/acme/{work,logs,config}
 
+  if [ -e /etc/letsencrypt/cli.ini ]; then
+    echo -n "WARNING: The certbot command will fail because it "
+    echo -n "can see /etc/letsencrypt/cli.ini from the host. This "
+    echo -n "is a bug in the argparser that certbot uses that "
+    echo "prevents me from override this."
+  fi
+
   for cert in $LETS_ENCRYPT_CERTS; do
     echo "Request certificate for $cert"
     certbot certonly \

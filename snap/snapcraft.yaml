@@ -76,6 +76,7 @@ parts:
     plugin: dump
     stage-packages:
       - inotify-tools
+      - certbot
       - curl
     stage:
       - -usr/share/man
@@ -103,8 +104,3 @@ parts:
       make install INSTALL_TOP=/usr/local
     build-packages:
       - libreadline-dev
-
-  certbot:
-    plugin: nil
-    stage-packages:
-      - certbot

@@ -32,6 +32,9 @@ apps:
   refresh-certs:
     command: bin/refresh-certs
     adapter: full
+    daemon: simple
+    passthrough:
+      timer: 00:00-24:00/2
     plugs:
       - network-bind
       - network

@@ -18,19 +18,33 @@ apps:
     daemon: simple
     plugs:
       - network-bind
+      - network
 
   reload:
     command: bin/reload
     adapter: full
+    plugs:
+      - network
 
   watch:
     command: bin/reload-service
     daemon: simple
     adapter: full
+    plugs:
+      - network
+
+hooks:
+  post-refresh:
+    plugs:
+      - network
 
 layout:
   /etc/haproxy:
     type: tmpfs
+  /usr/local/share/lua:
+    bind: $SNAP/usr/local/share/lua
+  /usr/local/lib/lua:
+    bind: $SNAP/usr/local/lib/lua
 
 parts:
   haproxy:
@@ -67,18 +81,20 @@ parts:
       'reload': bin/
       'reload-service': bin/
 
+  lets-encrypt-x3-cert:
+    plugin: nil
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/etc/certs/
+      wget https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt \
+        -O $SNAPCRAFT_PART_INSTALL/etc/certs/lets-encrypt-x3-cross-signed.pem
+
   lua:
     source: https://www.lua.org/ftp/lua-5.3.5.tar.gz
     plugin: make
     override-build: |
       make linux
-      make install INSTALL_TOP=$SNAPCRAFT_PART_INSTALL
-    organize:
-      'include': usr/
-      'lib': usr/
-      'share': usr/
-    stage:
-      - -man
+      make
+      make install INSTALL_TOP=/usr/local
     build-packages:
       - libreadline-dev
 
@@ -87,8 +103,8 @@ parts:
     source-commit: a63486204521b39e821b0128c840b5c5c8aaf568
     plugin: nil
     override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
-      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
+      cp acme.lua $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
     after: [ lua ]
 
   haproxy-lua-http:
@@ -96,8 +112,8 @@ parts:
     source-commit: 38d886c8f06870e110d263a540075cf700500486
     plugin: nil
     override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
-      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
+      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
     after: [ lua ]
 
   json-lua:
@@ -105,8 +121,8 @@ parts:
     source-tag: v0.1.2
     plugin: nil
     override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
-      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/share/lua/5.3/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
+      cp *.lua $SNAPCRAFT_PART_INSTALL/usr/local/share/lua/5.3/
     after: [ lua ]
 
   luaossl:
@@ -114,5 +130,5 @@ parts:
     source-tag: rel-20190612
     plugin: make
     make-parameters:
-      - prefix=/usr
+      - prefix=/usr/local
     after: [ lua ]

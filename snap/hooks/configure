@@ -30,8 +30,29 @@ LETS_ENCRYPT_CONTACT="$(snapctl get lets-encrypt-contact)"
 if [ "x$LETS_ENCRYPT_CONTACT" != "x" ] && [ "x$LETS_ENCRYPT_TOS" == "xaccept" ]; then
   if [ "x$LETS_ENCRYPT_CERTS" != "x" ]; then
     for cert in $LETS_ENCRYPT_CERTS; do
-      openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 \
-        -out $SNAP_DATA/acme/$cert.key
+      if [ ! -e $SNAP_DATA/acme/$cert.key ]; then
+        openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 \
+          -out $SNAP_DATA/acme/$cert.key
+      fi
+
+      cat <<EOF > /etc/haproxy/config.lua
+config = {
+    registration = {
+        -- You can read TOS here: https://letsencrypt.org/repository/
+        termsOfServiceAgreed = true,
+        contact = {"mailto:${LETS_ENCRYPT_CONTACT}"}
+    },
+
+    -- ACME certificate authority configuration
+    ca = {
+        -- HAProxy backend/server which proxies requests to ACME server
+        proxy_uri = "http://127.0.0.1:9012",
+        -- ACME server URI (also returned by ACME directory listings)
+        -- Use this server name in HAProxy config
+        uri = "https://acme-v02.api.letsencrypt.org",
+    }
+}
+EOF
     done
   fi
 fi

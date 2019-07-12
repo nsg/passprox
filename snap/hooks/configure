@@ -45,17 +45,18 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
 
   for cert in $LETS_ENCRYPT_CERTS; do
     echo "Request certificate for $cert"
-    certbot certonly \
-        --standalone \
-        -d $cert \
-        --non-interactive \
-        --agree-tos \
-        --email "$LETS_ENCRYPT_CONTACT" \
-        --http-01-port=8888 \
-        --test-cert \
+    certbot \
         --work-dir="$SNAP_DATA/acme/work" \
         --logs-dir="$SNAP_DATA/acme/logs" \
-        --config-dir="$SNAP_DATA/acme/config"
+        --config-dir="$SNAP_DATA/acme/config" \
+        certonly \
+          --standalone \
+          -d $cert \
+          --non-interactive \
+          --agree-tos \
+          --email "$LETS_ENCRYPT_CONTACT" \
+          --http-01-port=8888 \
+          --test-cert
   done
 fi
 

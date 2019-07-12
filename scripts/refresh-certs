@@ -2,8 +2,8 @@
 
 . $SNAP/snap/command-chain/snapcraft-runner
 
-certbot renew \
-    --tls-sni-01-port=8888 \
+certbot \
     --work-dir="$SNAP_DATA/acme/work" \
     --logs-dir="$SNAP_DATA/acme/logs" \
-    --config-dir="$SNAP_DATA/acme/config"
+    --config-dir="$SNAP_DATA/acme/config" \
+    renew --tls-sni-01-port=8888

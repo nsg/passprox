@@ -68,6 +68,8 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
   done
 fi
 
+$SNAP/bin/cat-certs
+
 # Reload haproxy service, fall back to a restart.
 if [ -e /etc/haproxy/haproxy.pid ]; then
   $SNAP/bin/reload || snapctl restart passprox.haproxy

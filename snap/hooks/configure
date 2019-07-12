@@ -49,7 +49,8 @@ config = {
         proxy_uri = "http://127.0.0.1:9012",
         -- ACME server URI (also returned by ACME directory listings)
         -- Use this server name in HAProxy config
-        uri = "https://acme-v02.api.letsencrypt.org",
+        -- uri = "https://acme-v02.api.letsencrypt.org",
+        uri = "https://acme-staging-v02.api.letsencrypt.org",
     }
 }
 EOF

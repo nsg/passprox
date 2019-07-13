@@ -52,19 +52,23 @@ if [ "x$LETS_ENCRYPT_CERTS" != "x" ] && \
   fi
 
   for cert in $LETS_ENCRYPT_CERTS; do
-    echo "Request certificate for $cert"
-    certbot certonly \
-        --work-dir="$SNAP_DATA/certbot/work" \
-        --logs-dir="$SNAP_DATA/certbot/logs" \
-        --config-dir="$SNAP_DATA/certbot/config" \
-        --config="$SNAP_DATA/certbot/cli.ini" \
-        --server https://acme-v02.api.letsencrypt.org/directory \
-        --standalone \
-        -d $cert \
-        --non-interactive \
-        --agree-tos \
-        --email "$LETS_ENCRYPT_CONTACT" \
-        --http-01-port=8888
+    if [ -e $SNAP_DATA/certbot/config/live/$cert/privkey.pem ]; then
+      echo "Certificate $cert already checked out, ignoring."
+    else
+      echo "Request certificate for $cert"
+      certbot certonly \
+          --work-dir="$SNAP_DATA/certbot/work" \
+          --logs-dir="$SNAP_DATA/certbot/logs" \
+          --config-dir="$SNAP_DATA/certbot/config" \
+          --config="$SNAP_DATA/certbot/cli.ini" \
+          --server https://acme-v02.api.letsencrypt.org/directory \
+          --standalone \
+          -d $cert \
+          --non-interactive \
+          --agree-tos \
+          --email "$LETS_ENCRYPT_CONTACT" \
+          --http-01-port=8888
+    fi
   done
 fi
 

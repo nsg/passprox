@@ -26,6 +26,12 @@ apps:
       - network-bind
       - network
 
+  certbot:
+    command: bin/certbot-wrapper
+    adapter: full
+    plugs:
+      - network
+
   reload:
     command: bin/reload
     adapter: full
@@ -100,6 +106,7 @@ parts:
       'reload-service': bin/
       'refresh-certs': bin/
       'cat-certs': bin/
+      'certbot-wrapper': bin/
 
   lua:
     source: https://www.lua.org/ftp/lua-5.3.5.tar.gz

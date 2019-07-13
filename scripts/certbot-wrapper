@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. $SNAP/snap/command-chain/snapcraft-runner
+
+$SNAP/usr/bin/certbot \
+    --work-dir="$SNAP_DATA/certbot/work" \
+    --logs-dir="$SNAP_DATA/certbot/logs" \
+    --config-dir="$SNAP_DATA/certbot/config" \
+    --config="$SNAP_DATA/certbot/cli.ini" \
+    --server https://acme-v02.api.letsencrypt.org/directory \
+    $@

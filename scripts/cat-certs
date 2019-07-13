@@ -2,9 +2,16 @@
 
 . $SNAP/snap/command-chain/snapcraft-runner
 
+(
+    cd $SNAP_DATA/certbot/config/live/
+    rm -- '*.pem'
+)
+
 mkdir -p $SNAP_DATA/certs/
 chmod 0700 $SNAP_DATA/certs/
 for d in $SNAP_DATA/certbot/config/live/*; do
-    cat $d/{fullchain.pem,privkey.pem} > "$SNAP_DATA/certs/$(basename $d).pem"
+    if [ "x$(basename $d)" != "x*" ]; then
+        cat $d/{fullchain.pem,privkey.pem} > "$SNAP_DATA/certs/$(basename $d).pem"
+    fi
 done
 chmod 0600 $SNAP_DATA/certs/*.pem

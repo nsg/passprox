@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. $SNAP/snap/command-chain/snapcraft-runner
-
 $SNAP/usr/bin/certbot \
     --work-dir="$SNAP_DATA/certbot/work" \
     --logs-dir="$SNAP_DATA/certbot/logs" \

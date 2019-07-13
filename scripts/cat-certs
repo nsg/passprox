@@ -9,4 +9,4 @@ for d in $SNAP_DATA/certbot/config/live/*; do
         cat $d/{fullchain.pem,privkey.pem} > "$SNAP_DATA/certs/$(basename $d).pem"
     fi
 done
-chmod 0600 $SNAP_DATA/certs/*.pem
+chmod 0600 $SNAP_DATA/certs/*.pem || :

@@ -7,6 +7,7 @@ certbot renew \
     --logs-dir="$SNAP_DATA/certbot/logs" \
     --config-dir="$SNAP_DATA/certbot/config" \
     --config="$SNAP_DATA/certbot/cli.ini" \
+    --server https://acme-v02.api.letsencrypt.org/directory \
     --tls-sni-01-port=8888
 
 $SNAP/bin/cat-certs

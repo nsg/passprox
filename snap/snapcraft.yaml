@@ -89,7 +89,7 @@ parts:
       - -usr/local/share
     organize:
       usr/local/sbin/haproxy: bin/haproxy
-    after: [ lua, detect-version ]
+    after: [ lua ]
 
   scripts:
     source: scripts

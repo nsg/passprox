@@ -1,8 +1,8 @@
 # Passprox
 [![Snap Status](https://build.snapcraft.io/badge/nsg/passage.svg)](https://build.snapcraft.io/user/nsg/passage)
 
-More or less a vanilla HAProxy install with automatic reloads and Let's Encrypt support.
-  
+HAProxy with a bundled Certbot (Let's Encrypt support). More or less a vanilla install with automatic reloads.
+
 Install it and edit `$SNAP_DATA/haproxy.cfg`. HAProxy will be reloaded automatically
 if the file is valid.
 

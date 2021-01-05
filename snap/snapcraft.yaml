@@ -1,9 +1,9 @@
 name: passprox
 base: core18
-version: '2.0.1'
+version: '2.3'
 summary: The proxy HAProxy inside a snap
 description: |
-  More or less a vanilla HAProxy install with automatic reloads.
+  HAProxy with a bundled certbot. More or less a vanilla install with automatic reloads.
   
   Install it and edit $SNAP_DATA/haproxy.cfg. HAProxy will be reloaded automatically
   if the file is valid.
@@ -70,7 +70,7 @@ layout:
 
 parts:
   haproxy:
-    source: http://git.haproxy.org/git/haproxy-2.0.git
+    source: http://git.haproxy.org/git/haproxy-2.3.git
     source-tag: v$SNAPCRAFT_PROJECT_VERSION
     plugin: make
     make-parameters:
@@ -109,7 +109,7 @@ parts:
       'certbot-wrapper': bin/
 
   lua:
-    source: https://www.lua.org/ftp/lua-5.3.5.tar.gz
+    source: https://www.lua.org/ftp/lua-5.3.6.tar.gz
     plugin: make
     override-build: |
       make linux

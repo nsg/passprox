@@ -1,6 +1,6 @@
 name: passprox
 base: core18
-version: '2.3'
+adopt-info: detect-version
 summary: The proxy HAProxy inside a snap
 description: |
   HAProxy with a bundled certbot. More or less a vanilla install with automatic reloads.
@@ -69,7 +69,15 @@ layout:
     type: tmpfs
 
 parts:
+  detect-version:
+    plugin: nil
+    override-build: |
+      apt -y install jq curl
+      VERSION_TAG=$(git ls-remote --tags --sort v:refname --refs http://git.haproxy.org/git/haproxy-2.3.git/ | awk -F'/' '{ print $NF }' | grep -E '^v[0-9]\.[0-9]+\.[0-9]+$' | sort | tail -1)
+      snapcraftctl set-version ${VERSION_TAG/v/}
+
   haproxy:
+    # Also update the version url above in detect-version
     source: http://git.haproxy.org/git/haproxy-2.3.git
     source-tag: v$SNAPCRAFT_PROJECT_VERSION
     plugin: make
@@ -89,7 +97,7 @@ parts:
       - -usr/local/share
     organize:
       usr/local/sbin/haproxy: bin/haproxy
-    after: [ lua ]
+    after: [ lua, detect-version ]
 
   scripts:
     source: scripts

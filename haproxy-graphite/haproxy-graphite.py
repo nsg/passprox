@@ -53,7 +53,7 @@ def carbon(path, value):
     sock.close()
 
 
-def main():
+def do_work():
     req = requests.get(STATS_URL, auth=(USER, PASS))
 
     if req.status_code == 200:
@@ -142,16 +142,19 @@ def main():
                 save_carbon(path, data, 'rtime')
                 save_carbon(path, data, 'ttime')
 
+def main():
+    while True:
+        start_ts = time.time()
+        do_work()
+        now_ts = time.time()
+        delta = now_ts - start_ts
+        sleep_for = CARBON_TIME_INTERVAL - delta
 
-while True:
-    start_ts = time.time()
+        if sleep_for < 0:
+            sleep_for = 0
+            print("[WARNING] Metrics took more than {}s to send, sleep for {}s".format(CARBON_TIME_INTERVAL, sleep_for))
+
+        time.sleep(sleep_for)
+
+if __name__ == "__main__":
     main()
-    now_ts = time.time()
-    delta = now_ts - start_ts
-    sleep_for = CARBON_TIME_INTERVAL - delta
-
-    if sleep_for < 0:
-        sleep_for = 0
-        print("[WARNING] Metrics took more than {}s to send, sleep for {}s".format(CARBON_TIME_INTERVAL, sleep_for))
-
-    time.sleep(sleep_for)

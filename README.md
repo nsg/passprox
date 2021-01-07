@@ -4,6 +4,8 @@
 A HAProxy distribution bundled with Certbot (Let's Encrypt support) and Carbon (Graphite) metrics support.
 The HAProxy install is a more or less a vanilla install with automatic reloads.
 
+![](docs/passprox-haproxy-demo.png)
+
 ## Install
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/passprox)
@@ -64,6 +66,8 @@ backend letsencrypt-backend
 ```
 
 ## Export Carbon (Graphite) metrics
+
+![](docs/passprox-grafana-demo.png)
 
 You can optionally enable the Graphite/Carbon export option. You need to set the following required parameters to enable it:
 

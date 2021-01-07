@@ -1,5 +1,5 @@
 # Passprox
-[![Snap Status](https://build.snapcraft.io/badge/nsg/passage.svg)](https://build.snapcraft.io/user/nsg/passage)
+[![passprox](https://snapcraft.io/passprox/badge.svg)](https://snapcraft.io/passprox)
 
 HAProxy with a bundled Certbot (Let's Encrypt support). More or less a vanilla install with automatic reloads.
 

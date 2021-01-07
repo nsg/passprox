@@ -150,5 +150,8 @@ while True:
     delta = now_ts - start_ts
     sleep_for = CARBON_TIME_INTERVAL - delta
 
-    print("Metrics sent, sleep for {}s".format(sleep_for))
+    if sleep_for < 0:
+        sleep_for = 0
+        print("[WARNING] Metrics took more than {}s to send, sleep for {}s".format(CARBON_TIME_INTERVAL, sleep_for))
+
     time.sleep(sleep_for)

@@ -58,6 +58,33 @@ backend letsencrypt-backend
   server certbot 127.0.0.1:8888
 ```
 
+## Export Carbon (Graphite) metrics
+
+You can optionally enable the Graphite/Carbon export option. You need to set the following required parameters to enable it:
+
+```
+sudo snap set passprox carbon-server=<server>
+# A list of named front/backend and listen
+sudo snap set passprox stats-collect="http https be_nextcloud"
+```
+
+The follow are optional, default value is shown:
+
+```
+sudo snap set passprox carbon-port=2003
+sudo snap set passprox carbon-path=haproxy
+sudo snap set passprox carbon-time-interval=10
+sudo snap set passprox stats-url="http://127.0.0.1:8080/;csv"
+sudo snap set passprox stats-username="none"
+sudo snap set passprox stats-password="none"
+```
+
+If you like to debug the export:
+
+```
+journalctl -fu snap.passprox.graphite
+```
+
 ## Note
 
 Note that `stable`, `candidate`, `beta` and `edge` will be tracking the latest release. Snapd updates packages automatically in the background so it's possible that a future update will change the syntax in haproxy.cfg and break the update.

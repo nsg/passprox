@@ -55,6 +55,15 @@ apps:
     plugs:
       - network
 
+  graphite:
+    command: bin/haproxy-graphite.py
+    daemon: simple
+    adapter: full
+    after: [haproxy]
+
+    plugs:
+      - network
+
 hooks:
   post-refresh:
     plugs:
@@ -107,6 +116,14 @@ parts:
       'refresh-certs': bin/
       'cat-certs': bin/
       'certbot-wrapper': bin/
+
+  haproxy-graphite:
+    source: haproxy-graphite
+    plugin: python
+    python-packages:
+      - requests
+    override-build: |
+      install haproxy-graphite.py -D $SNAPCRAFT_PART_INSTALL/bin/haproxy-graphite.py
 
   lua:
     source: https://www.lua.org/ftp/lua-5.3.6.tar.gz

@@ -80,3 +80,6 @@ if [ -e /etc/haproxy/haproxy.pid ]; then
 else
   snapctl restart passprox.haproxy
 fi
+
+# Reload graphite service
+snapctl restart passprox.graphite

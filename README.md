@@ -1,10 +1,8 @@
 # Passprox
 [![passprox](https://snapcraft.io/passprox/badge.svg)](https://snapcraft.io/passprox)
 
-HAProxy with a bundled Certbot (Let's Encrypt support). More or less a vanilla install with automatic reloads.
-
-Install it and edit `$SNAP_DATA/haproxy.cfg`. HAProxy will be reloaded automatically
-if the file is valid.
+A HAProxy distribution bundled with Certbot (Let's Encrypt support) and Carbon (Graphite) metrics support.
+The HAProxy install is a more or less a vanilla install with automatic reloads.
 
 ## Install
 
@@ -16,7 +14,12 @@ snap install passprox
 
 ## Configure
 
-Edit `$SNAP_DATA/haproxy.cfg` (possible /var/snap/passprox/haproxy.cfg). Save the file. If the file is valid, HAProxy should be reloaded automatically.
+Edit `$SNAP_DATA/haproxy.cfg` (usually /var/snap/passprox/haproxy.cfg). Save the file. If the file is valid, HAProxy should be reloaded automatically.
+By default, the HAProxy stats is available on port 8080.
+
+## Ports
+
+By default the service will listen at port 80 and 8080. The service may fail if you already are using these ports. Update the configuration and then run `snap restart passprox` to restart the services. Certbot uses port 8888, this is required for Let's Encrypt support (if you need this to be configurable, open an issue).
 
 ## Debug
 
